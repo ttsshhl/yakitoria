@@ -443,6 +443,99 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
 }
 .checkout:hover{filter:brightness(1.12)}
 .checkout:disabled{opacity:.3;cursor:not-allowed}
+.phone-field{margin:14px 0 4px}
+.phone-field label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:6px;font-weight:500}
+.phone-field input{
+  width:100%;box-sizing:border-box;padding:13px 15px;border-radius:12px;
+  border:1.5px solid var(--line);background:var(--bg-alt);color:var(--ink);
+  font-family:var(--body);font-size:1rem;transition:border-color .2s;
+}
+.phone-field input:focus{outline:none;border-color:var(--lime)}
+.phone-field input::placeholder{color:var(--muted)}
+.phone-err{color:#E4573D;font-size:.8rem;margin-top:6px;display:none}
+.phone-err.on{display:block}
+.checkout.sending{opacity:.6;cursor:wait}
+.checkout.done{background:var(--lime)!important}
+
+/* ============ PRODUCT MODAL ============ */
+.pm-ov{
+  position:fixed;inset:0;background:var(--ov);backdrop-filter:blur(5px);
+  opacity:0;visibility:hidden;transition:.32s;z-index:210;
+}
+.pm-ov.on{opacity:1;visibility:visible}
+.pm{
+  position:fixed;left:50%;top:50%;z-index:211;
+  width:min(920px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 48px));
+  background:var(--card);border-radius:24px;overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;
+  box-shadow:0 40px 90px rgba(0,0,0,.34);
+  transform:translate(-50%,-46%) scale(.96);opacity:0;visibility:hidden;
+  transition:transform .4s cubic-bezier(.3,1.1,.5,1),opacity .3s,visibility .3s;
+}
+.pm.on{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible}
+.pm-close{
+  position:absolute;top:14px;right:14px;z-index:5;width:38px;height:38px;border-radius:50%;
+  background:var(--card);box-shadow:0 3px 12px rgba(0,0,0,.18);display:grid;place-items:center;
+  transition:transform .2s,background .2s;color:var(--ink);
+}
+.pm-close:hover{transform:rotate(90deg);background:var(--hover)}
+.pm-close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.pm-media{background:var(--bg-alt);position:relative;overflow:hidden}
+.pm-imgwrap{width:100%;height:100%;min-height:280px}
+.pm-imgwrap img{width:100%;height:100%;object-fit:cover;display:block}
+.pm-imgwrap .pm-noimg{width:100%;height:100%;display:grid;place-items:center;font-size:4rem;opacity:.3}
+.pm-info{display:flex;flex-direction:column;min-height:0}
+.pm-scroll{flex:1;overflow-y:auto;padding:30px 30px 18px}
+.pm-scroll::-webkit-scrollbar{width:5px}
+.pm-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.pm-info h3{
+  font-family:var(--display);font-weight:700;letter-spacing:-.03em;
+  font-size:1.55rem;line-height:1.15;margin-bottom:14px;color:var(--ink);
+}
+.pm-desc{color:var(--ink-2);font-size:.98rem;line-height:1.6;margin-bottom:20px}
+.pm-extra{display:flex;flex-direction:column;gap:12px}
+.pm-extra .pm-badges{display:flex;flex-wrap:wrap;gap:8px}
+.pm-chip{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:100px;
+  background:var(--hover);font-size:.86rem;font-weight:500;color:var(--ink);
+}
+.pm-label{font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.pm-foot{
+  flex:none;padding:18px 30px 24px;border-top:1px solid var(--line);background:var(--card);
+}
+.pm-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
+.pm-name{font-size:.92rem;color:var(--ink-2);font-weight:500;line-height:1.3}
+.pm-price{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--ink);white-space:nowrap;letter-spacing:-.02em}
+.pm-actions{display:flex;gap:12px;align-items:stretch}
+.pm-qty{
+  display:flex;align-items:center;gap:6px;background:var(--hover);
+  border-radius:13px;padding:0 4px;flex:none;
+}
+.pm-qb{
+  width:40px;height:48px;display:grid;place-items:center;
+  font-size:1.3rem;font-weight:500;color:var(--ink);border-radius:11px;transition:background .18s;
+}
+.pm-qb:hover{background:var(--card)}
+.pm-qn{min-width:26px;text-align:center;font-weight:700;font-size:1.05rem}
+.pm-add{
+  flex:1;border-radius:13px;background:var(--btn);color:var(--btn-ink);
+  font-family:var(--body);font-weight:600;font-size:1rem;transition:filter .2s,transform .1s;
+}
+.pm-add:hover{filter:brightness(1.12)}
+.pm-add:active{transform:scale(.98)}
+.pm-add.done{background:var(--lime)!important}
+@media(max-width:720px){
+  .pm{
+    grid-template-columns:1fr;top:auto;bottom:0;left:0;transform:translateY(100%);
+    width:100vw;max-height:92vh;border-radius:22px 22px 0 0;
+  }
+  .pm.on{transform:translateY(0)}
+  .pm-media{max-height:34vh}
+  .pm-imgwrap{min-height:200px}
+  .pm-scroll{padding:22px 20px 14px}
+  .pm-info h3{font-size:1.3rem}
+  .pm-foot{padding:14px 20px 20px}
+}
 
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.8,.3,1),transform .7s cubic-bezier(.2,.8,.3,1)}
 .reveal.in{opacity:1;transform:none}
@@ -579,7 +672,7 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
       <div class="del-card reveal">
         <span class="n">02</span>
         <h4>Подтверждаем</h4>
-        <p>Отправляем заказ в WhatsApp. Менеджер перезвонит и уточнит адрес и время.</p>
+        <p>Отправляем заказ в MAX. Менеджер перезвонит и уточнит адрес и время.</p>
       </div>
       <div class="del-card reveal">
         <span class="n">03</span>
@@ -621,16 +714,16 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
         <div class="vl">ул. 60 лет Октября, д. 7</div>
         <div class="sub">г. Ессентуки</div>
       </div>
-      <a href="https://wa.me/79283464633" target="_blank" rel="noopener" class="con reveal">
+      <a href="https://max.ru/:share?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D1%84%D0%BE%D1%80%D0%BC%D0%B8%D1%82%D1%8C%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%20YAKISTORI" target="_blank" rel="noopener" class="con reveal">
         <span class="ic">💬</span>
-        <div class="lb">WhatsApp</div>
+        <div class="lb">MAX</div>
         <div class="vl">Написать нам</div>
         <div class="sub">Заказ в один клик</div>
       </a>
     </div>
     <div class="cta-band reveal">
       <h3>Голодны? Это лечится.</h3>
-      <p>Соберите заказ на сайте — отправим его в WhatsApp за секунду.</p>
+      <p>Соберите заказ на сайте — отправим его в MAX за секунду.</p>
       <a href="#menu" class="btn btn-p">Открыть меню</a>
     </div>
   </div>
@@ -643,6 +736,36 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
     <div>Ежедневно с 11:00 до 23:00 · 8 (928) 346-46-33</div>
   </div>
 </footer>
+
+<!-- PRODUCT MODAL -->
+<div class="pm-ov" id="pmOv"></div>
+<div class="pm" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+  <button class="pm-close" id="pmClose" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <div class="pm-media"><div class="pm-imgwrap" id="pmImg"></div></div>
+  <div class="pm-info">
+    <div class="pm-scroll">
+      <h3 id="pmTitle"></h3>
+      <p class="pm-desc" id="pmDesc"></p>
+      <div class="pm-extra" id="pmExtra"></div>
+    </div>
+    <div class="pm-foot">
+      <div class="pm-row">
+        <span class="pm-name" id="pmFootName"></span>
+        <span class="pm-price" id="pmPrice"></span>
+      </div>
+      <div class="pm-actions">
+        <div class="pm-qty">
+          <button class="pm-qb" id="pmMinus" aria-label="Меньше">−</button>
+          <span class="pm-qn" id="pmQty">1</span>
+          <button class="pm-qb" id="pmPlus" aria-label="Больше">+</button>
+        </div>
+        <button class="pm-add" id="pmAdd">Добавить</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- CART -->
 <div class="ov" id="ov"></div>
@@ -659,7 +782,12 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
     <div class="trow"><span>Доставка</span><span id="ship">—</span></div>
     <div class="trow tot"><span>Итого</span><span id="total">0 ₽</span></div>
     <div class="free-hint" id="hint"></div>
-    <button class="checkout" id="checkout" disabled>Оформить в WhatsApp</button>
+    <div class="phone-field">
+      <label for="phone">Ваш телефон для связи</label>
+      <input type="tel" id="phone" inputmode="tel" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+      <div class="phone-err" id="phoneErr">Укажите номер телефона</div>
+    </div>
+    <button class="checkout" id="checkout" disabled>Оформить заказ</button>
   </div>
 </aside>
 
@@ -967,13 +1095,52 @@ const closeCart=()=>{$('drawer').classList.remove('on');$('ov').classList.remove
 $('cartBtn').onclick=openCart; $('closeCart').onclick=closeCart; $('ov').onclick=closeCart;
 addEventListener('keydown',e=>{if(e.key==='Escape')closeCart()});
 
-$('checkout').onclick=()=>{
+// Адрес сервера приёма заказов (заменить на ваш Render-URL)
+const ORDER_API = 'https://yakistoriserver.onrender.com/order';
+
+$('checkout').onclick=async()=>{
+  const btn=$('checkout'), errBox=$('phoneErr'), input=$('phone');
+  const phone=(input.value||'').trim();
+
+  // Проверка телефона: минимум 10 цифр
+  const digits=phone.replace(/\D/g,'');
+  if(digits.length<10){
+    errBox.classList.add('on');
+    input.focus();
+    return;
+  }
+  errBox.classList.remove('on');
+
   const sum=cart.reduce((a,b)=>a+b.p*b.q,0);
   const ship=sum>=1500?0:200;
-  let t='Здравствуйте! Заказ с сайта YAKISTORI:%0A%0A';
-  cart.forEach(i=>t+=`• ${i.n} — ${i.q} шт. × ${i.p} ₽%0A`);
-  t+=`%0AСумма: ${sum} ₽%0AДоставка: ${ship?ship+' ₽':'бесплатно'}%0AИтого: ${sum+ship} ₽%0A%0AИмя:%0AАдрес:%0AВремя:`;
-  open('https://wa.me/79283464633?text='+t,'_blank');
+  const total=sum+ship;
+  const items=cart.map(i=>({n:i.n,q:i.q,p:i.p}));
+
+  btn.disabled=true; btn.classList.add('sending'); btn.textContent='Отправляем…';
+
+  try{
+    const r=await fetch(ORDER_API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({items,sum,ship,total,phone})
+    });
+    const data=await r.json();
+    if(!r.ok || !data.ok) throw new Error('bad response');
+
+    // Успех
+    btn.classList.remove('sending'); btn.classList.add('done');
+    btn.textContent='Заказ принят ✓';
+    cart=[]; save(); paint();
+    setTimeout(()=>{
+      closeCart();
+      btn.classList.remove('done'); btn.textContent='Оформить заказ';
+      input.value='';
+    },1800);
+  }catch(e){
+    btn.classList.remove('sending'); btn.disabled=false;
+    btn.textContent='Оформить заказ';
+    alert('Не удалось отправить заказ. Позвоните нам: 8 (928) 346-46-33');
+  }
 };
 
 /* ================= SEARCH ================= */
