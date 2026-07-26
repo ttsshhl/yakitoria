@@ -467,6 +467,45 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
 .checkout.sending{opacity:.6;cursor:wait}
 .checkout.done{background:var(--lime)!important}
 
+/* ============ FLOATING CART BUTTON ============ */
+.cart-fab{
+  position:fixed;right:20px;bottom:20px;z-index:120;
+  display:none;align-items:center;gap:10px;
+  padding:14px 20px;border-radius:16px;
+  background:var(--btn);color:var(--btn-ink);
+  font-family:var(--body);font-weight:600;font-size:.98rem;
+  box-shadow:0 10px 30px rgba(0,0,0,.28);
+  transition:transform .18s,filter .2s,opacity .3s;
+  transform-origin:center bottom;
+}
+.cart-fab.show{display:inline-flex;animation:fabIn .4s cubic-bezier(.3,1.4,.5,1)}
+.cart-fab:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.cart-fab:active{transform:scale(.97)}
+.cart-fab.shake{animation:fabShake .6s ease-in-out}
+@keyframes fabIn{from{transform:translateY(40px) scale(.85);opacity:0}to{transform:none;opacity:1}}
+@keyframes fabShake{
+  0%,100%{transform:rotate(0)}
+  15%{transform:rotate(-2.2deg)}
+  30%{transform:rotate(1.8deg)}
+  45%{transform:rotate(-1.6deg)}
+  60%{transform:rotate(1.1deg)}
+  75%{transform:rotate(-.6deg)}
+}
+.cart-fab .cf-icon{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cart-fab .cf-count{
+  display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 5px;
+  background:#E4573D;color:#fff;border-radius:11px;font-size:.78rem;font-weight:800;
+  margin-right:2px;
+}
+.cart-fab .cf-sum{font-weight:700;margin-left:2px;opacity:.92}
+.cart-fab .cf-sum::before{content:'·';margin-right:8px;opacity:.5}
+@media(max-width:520px){
+  .cart-fab{left:14px;right:14px;bottom:14px;justify-content:center;padding:16px 20px;font-size:1rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .cart-fab.shake{animation:none}
+}
+
 /* ============ SUCCESS MODAL ============ */
 .ok-ov{
   position:fixed;inset:0;background:var(--ov);backdrop-filter:blur(6px);
@@ -605,6 +644,16 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
   .pm-scroll{padding:22px 20px 14px}
   .pm-info h3{font-size:1.3rem}
   .pm-foot{padding:14px 20px 20px}
+  /* Корзина на мобильных: тянем на всю доступную высоту с учётом
+     панелей браузера, чтобы кнопка "Оформить заказ" была видна */
+  .drawer{height:100dvh}
+  .d-body{padding:12px 20px}
+  .ci{padding:11px 0}
+  .d-foot{padding:14px 20px calc(16px + env(safe-area-inset-bottom))}
+  .phone-field{margin:10px 0 4px}
+  .phone-field input{padding:11px 14px}
+  .checkout{padding:14px}
+  .trow{margin-bottom:6px}
 }
 
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.8,.3,1),transform .7s cubic-bezier(.2,.8,.3,1)}
@@ -883,6 +932,13 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
   <p>Ожидайте звонка менеджера для подтверждения.</p>
   <button class="ok-btn" id="okBtn">Отлично</button>
 </div>
+
+<!-- FLOATING CART BUTTON -->
+<button class="cart-fab" id="cartFab" aria-label="Открыть корзину">
+  <svg viewBox="0 0 24 24" class="cf-icon"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+  <span class="cf-text"><span class="cf-count" id="cfCount">0</span> в корзине</span>
+  <span class="cf-sum" id="cfSum"></span>
+</button>
 
 <!-- CART -->
 <div class="ov" id="ov"></div><aside class="drawer" id="drawer" aria-label="Корзина">
@@ -1203,6 +1259,12 @@ function paint(){
   $('total').textContent=(sum+ship)+' ₽';
   $('hint').textContent = (sum>0&&sum<1500) ? `До бесплатной доставки ${1500-sum} ₽` : (sum>=1500?'Доставка бесплатно 🎉':'');
   $('checkout').disabled=!cart.length;
+
+  // Плавающий виджет корзины
+  const fab=$('cartFab');
+  $('cfCount').textContent=qty;
+  $('cfSum').textContent=(sum+ship)+' ₽';
+  fab.classList.toggle('show',qty>0);
 }
 window.chg=(x,d)=>{cart[x].q+=d; if(cart[x].q<1)cart.splice(x,1); save(); paint();};
 window.rm=x=>{cart.splice(x,1); save(); paint();};
@@ -1210,7 +1272,16 @@ window.rm=x=>{cart.splice(x,1); save(); paint();};
 const openCart=()=>{$('drawer').classList.add('on');$('ov').classList.add('on');document.body.style.overflow='hidden'};
 const closeCart=()=>{$('drawer').classList.remove('on');$('ov').classList.remove('on');document.body.style.overflow=''};
 $('cartBtn').onclick=openCart; $('closeCart').onclick=closeCart; $('ov').onclick=closeCart;
+$('cartFab').onclick=openCart;
 addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeOk();}});
+
+// Плавающий виджет корзины иногда еле заметно потряхивается
+setInterval(()=>{
+  const fab=$('cartFab');
+  if(fab.classList.contains('show') && !$('drawer').classList.contains('on')){
+    fab.classList.remove('shake'); void fab.offsetWidth; fab.classList.add('shake');
+  }
+},6000);
 
 // Адрес сервера приёма заказов (заменить на ваш Render-URL)
 const ORDER_API = 'https://yakistoriserver.onrender.com/order';
