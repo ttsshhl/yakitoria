@@ -457,6 +457,45 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
 .checkout.sending{opacity:.6;cursor:wait}
 .checkout.done{background:var(--lime)!important}
 
+/* ============ SUCCESS MODAL ============ */
+.ok-ov{
+  position:fixed;inset:0;background:var(--ov);backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:.3s;z-index:320;
+}
+.ok-ov.on{opacity:1;visibility:visible}
+.ok-modal{
+  position:fixed;left:50%;top:50%;z-index:321;
+  width:min(400px,calc(100vw - 40px));
+  background:var(--card);border-radius:26px;padding:40px 32px 32px;text-align:center;
+  box-shadow:0 40px 90px rgba(0,0,0,.34);
+  transform:translate(-50%,-46%) scale(.92);opacity:0;visibility:hidden;
+  transition:transform .42s cubic-bezier(.3,1.3,.5,1),opacity .3s,visibility .3s;
+}
+.ok-modal.on{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible}
+.ok-icon{width:88px;height:88px;margin:0 auto 22px}
+.ok-icon svg{width:100%;height:100%}
+.ok-c{stroke:var(--lime);stroke-width:2.5;stroke-dasharray:151;stroke-dashoffset:151;
+  transition:stroke-dashoffset .6s ease .1s}
+.ok-ch{stroke:var(--lime);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:40;stroke-dashoffset:40;transition:stroke-dashoffset .4s ease .55s}
+.ok-modal.on .ok-c{stroke-dashoffset:0}
+.ok-modal.on .ok-ch{stroke-dashoffset:0}
+.ok-modal h3{
+  font-family:var(--display);font-weight:700;letter-spacing:-.03em;
+  font-size:1.6rem;color:var(--ink);margin-bottom:12px;
+}
+.ok-modal p{color:var(--ink-2);font-size:1rem;line-height:1.6;margin-bottom:28px}
+.ok-btn{
+  width:100%;padding:15px;border-radius:14px;background:var(--btn);color:var(--btn-ink);
+  font-family:var(--body);font-weight:600;font-size:1.02rem;transition:filter .2s,transform .1s;
+}
+.ok-btn:hover{filter:brightness(1.12)}
+.ok-btn:active{transform:scale(.98)}
+@media(max-width:480px){
+  .ok-modal{padding:34px 24px 26px}
+  .ok-modal h3{font-size:1.4rem}
+}
+
 /* ============ PRODUCT MODAL ============ */
 .pm-ov{
   position:fixed;inset:0;background:var(--ov);backdrop-filter:blur(5px);
@@ -767,9 +806,19 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
   </div>
 </div>
 
+<!-- SUCCESS MODAL -->
+<div class="ok-ov" id="okOv"></div>
+<div class="ok-modal" id="okModal" role="dialog" aria-modal="true">
+  <div class="ok-icon">
+    <svg viewBox="0 0 52 52"><circle class="ok-c" cx="26" cy="26" r="24" fill="none"/><path class="ok-ch" fill="none" d="M14 27l8 8 16-16"/></svg>
+  </div>
+  <h3>Ваш заказ принят!</h3>
+  <p>Скоро он будет у вас 🍣<br>Ожидайте звонка менеджера для подтверждения.</p>
+  <button class="ok-btn" id="okBtn">Отлично</button>
+</div>
+
 <!-- CART -->
-<div class="ov" id="ov"></div>
-<aside class="drawer" id="drawer" aria-label="Корзина">
+<div class="ov" id="ov"></div><aside class="drawer" id="drawer" aria-label="Корзина">
   <div class="d-head">
     <h4>Корзина</h4>
     <button class="icon-btn" id="closeCart" aria-label="Закрыть">
@@ -1093,7 +1142,7 @@ window.rm=x=>{cart.splice(x,1); save(); paint();};
 const openCart=()=>{$('drawer').classList.add('on');$('ov').classList.add('on');document.body.style.overflow='hidden'};
 const closeCart=()=>{$('drawer').classList.remove('on');$('ov').classList.remove('on');document.body.style.overflow=''};
 $('cartBtn').onclick=openCart; $('closeCart').onclick=closeCart; $('ov').onclick=closeCart;
-addEventListener('keydown',e=>{if(e.key==='Escape')closeCart()});
+addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();closeOk();}});
 
 // Адрес сервера приёма заказов (заменить на ваш Render-URL)
 const ORDER_API = 'https://yakistoriserver.onrender.com/order';
@@ -1128,20 +1177,30 @@ $('checkout').onclick=async()=>{
     if(!r.ok || !data.ok) throw new Error('bad response');
 
     // Успех
-    btn.classList.remove('sending'); btn.classList.add('done');
-    btn.textContent='Заказ принят ✓';
     cart=[]; save(); paint();
-    setTimeout(()=>{
-      closeCart();
-      btn.classList.remove('done'); btn.textContent='Оформить заказ';
-      input.value='';
-    },1800);
+    closeCart();
+    btn.classList.remove('sending'); btn.disabled=false;
+    btn.textContent='Оформить заказ';
+    input.value='';
+    showOk();
   }catch(e){
     btn.classList.remove('sending'); btn.disabled=false;
     btn.textContent='Оформить заказ';
     alert('Не удалось отправить заказ. Позвоните нам: 8 (928) 346-46-33');
   }
 };
+
+// Модалка успешного заказа
+function showOk(){
+  $('okOv').classList.add('on');
+  $('okModal').classList.add('on');
+}
+function closeOk(){
+  $('okOv').classList.remove('on');
+  $('okModal').classList.remove('on');
+}
+$('okBtn').onclick=closeOk;
+$('okOv').onclick=closeOk;
 
 /* ================= SEARCH ================= */
 $('search').oninput=e=>{q=e.target.value; render();};
