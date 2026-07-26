@@ -472,14 +472,38 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
   transition:transform .42s cubic-bezier(.3,1.3,.5,1),opacity .3s,visibility .3s;
 }
 .ok-modal.on{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible}
-.ok-icon{width:88px;height:88px;margin:0 auto 22px}
-.ok-icon svg{width:100%;height:100%}
-.ok-c{stroke:var(--lime);stroke-width:2.5;stroke-dasharray:151;stroke-dashoffset:151;
-  transition:stroke-dashoffset .6s ease .1s}
-.ok-ch{stroke:var(--lime);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:40;stroke-dashoffset:40;transition:stroke-dashoffset .4s ease .55s}
-.ok-modal.on .ok-c{stroke-dashoffset:0}
-.ok-modal.on .ok-ch{stroke-dashoffset:0}
+.ok-scene{width:100%;height:130px;margin:0 auto 18px;overflow:hidden}
+.ok-svg{width:100%;height:100%;display:block}
+.ok-svg .road{stroke:var(--line);stroke-width:2.5}
+.ok-svg .dashes line{stroke:var(--line);stroke-width:2;stroke-linecap:round}
+.ok-modal.on .dashes{animation:dashMove .5s linear infinite}
+@keyframes dashMove{from{transform:translateX(0)}to{transform:translateX(-50px)}}
+.ok-svg .courier{transform:translateX(-70px);opacity:0}
+.ok-modal.on .courier{animation:courierIn 3.4s cubic-bezier(.35,.6,.3,1) forwards}
+@keyframes courierIn{
+  0%{transform:translateX(-70px);opacity:0}
+  12%{opacity:1}
+  55%{transform:translateX(70px)}
+  70%{transform:translateX(60px)}
+  100%{transform:translateX(320px);opacity:1}
+}
+.ok-svg .scoot{fill:none;stroke:var(--ink);stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round}
+.ok-svg .box{fill:var(--lime);stroke:var(--ink);stroke-width:2}
+.ok-svg .box-tape{stroke:var(--ink);stroke-width:1.5;opacity:.5}
+.ok-svg .rider-head{fill:var(--ink)}
+.ok-svg .rider-body{fill:var(--ink)}
+.ok-svg .handle{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+.ok-svg .wheel{fill:none;stroke:var(--ink);stroke-width:3.5}
+.ok-svg .hub{fill:var(--ink)}
+.ok-modal.on .wheel,.ok-modal.on .hub{transform-box:fill-box;transform-origin:center;animation:spin .4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ok-svg .speed{opacity:0}
+.ok-modal.on .speed{stroke:var(--lime);stroke-width:2.5;stroke-linecap:round;animation:speedFlash .3s linear infinite}
+@keyframes speedFlash{0%,100%{opacity:0}50%{opacity:.7}}
+@media(prefers-reduced-motion:reduce){
+  .ok-modal.on .courier,.ok-modal.on .dashes,.ok-modal.on .wheel,.ok-modal.on .hub,.ok-modal.on .speed{animation:none}
+  .ok-svg .courier{transform:translateX(90px);opacity:1}
+}
 .ok-modal h3{
   font-family:var(--display);font-weight:700;letter-spacing:-.03em;
   font-size:1.6rem;color:var(--ink);margin-bottom:12px;
@@ -809,11 +833,45 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
 <!-- SUCCESS MODAL -->
 <div class="ok-ov" id="okOv"></div>
 <div class="ok-modal" id="okModal" role="dialog" aria-modal="true">
-  <div class="ok-icon">
-    <svg viewBox="0 0 52 52"><circle class="ok-c" cx="26" cy="26" r="24" fill="none"/><path class="ok-ch" fill="none" d="M14 27l8 8 16-16"/></svg>
+  <div class="ok-scene">
+    <svg viewBox="0 0 260 130" class="ok-svg" xmlns="http://www.w3.org/2000/svg">
+      <!-- дорога -->
+      <line class="road" x1="0" y1="112" x2="260" y2="112"/>
+      <g class="dashes">
+        <line x1="10" y1="120" x2="30" y2="120"/>
+        <line x1="60" y1="120" x2="80" y2="120"/>
+        <line x1="110" y1="120" x2="130" y2="120"/>
+        <line x1="160" y1="120" x2="180" y2="120"/>
+        <line x1="210" y1="120" x2="230" y2="120"/>
+      </g>
+      <!-- курьер на скутере -->
+      <g class="courier">
+        <!-- линии скорости -->
+        <g class="speed">
+          <line x1="-6" y1="66" x2="14" y2="66"/>
+          <line x1="-14" y1="78" x2="8" y2="78"/>
+          <line x1="-4" y1="90" x2="12" y2="90"/>
+        </g>
+        <!-- тело скутера -->
+        <path class="scoot" d="M40 96 L64 96 L70 78 L86 78 L86 92 Q100 92 100 96"/>
+        <!-- коробка с едой -->
+        <rect class="box" x="34" y="70" width="20" height="20" rx="3"/>
+        <path class="box-tape" d="M44 70 L44 90 M34 80 L54 80"/>
+        <!-- курьер -->
+        <circle class="rider-head" cx="74" cy="60" r="7"/>
+        <path class="rider-body" d="M74 67 Q78 78 84 80 L70 80 Q70 72 74 67"/>
+        <!-- руль -->
+        <line class="handle" x1="84" y1="80" x2="92" y2="74"/>
+        <!-- колёса -->
+        <circle class="wheel" cx="52" cy="100" r="9"/>
+        <circle class="wheel" cx="94" cy="100" r="9"/>
+        <circle class="hub" cx="52" cy="100" r="3"/>
+        <circle class="hub" cx="94" cy="100" r="3"/>
+      </g>
+    </svg>
   </div>
   <h3>Ваш заказ принят!</h3>
-  <p>Скоро он будет у вас 🍣<br>Ожидайте звонка менеджера для подтверждения.</p>
+  <p>Курьер уже мчит к вам 🛵<br>Ожидайте звонка менеджера для подтверждения.</p>
   <button class="ok-btn" id="okBtn">Отлично</button>
 </div>
 
