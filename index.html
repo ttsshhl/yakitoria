@@ -139,14 +139,24 @@ body,header,.card,.feat,.del-card,.con,.drawer,.d-foot,.tab,.search-box,.wok-not
   transition:background-color .32s ease,color .32s ease,border-color .32s ease;
 }
 #cartCount{
-  position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;padding:0 5px;
-  background:var(--btn);color:var(--btn-ink);border-radius:10px;font-size:.68rem;font-weight:700;
+  position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;
+  background:#E4573D;color:#fff;border-radius:11px;font-size:.7rem;font-weight:800;
   display:grid;place-items:center;transform:scale(0);transition:transform .3s cubic-bezier(.34,1.7,.64,1);
-  border:2px solid var(--bg);
+  border:2px solid var(--bg);box-shadow:0 2px 8px rgba(228,87,61,.5);z-index:2;
 }
-#cartCount.on{transform:scale(1)}
-#cartCount.pop{animation:pop .4s}
-@keyframes pop{50%{transform:scale(1.4)}}
+#cartCount.on{transform:scale(1);animation:cartPulse 2s ease-in-out infinite}
+#cartCount.pop{animation:pop .45s}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.45)}100%{transform:scale(1)}}
+@keyframes cartPulse{
+  0%,100%{box-shadow:0 2px 8px rgba(228,87,61,.5)}
+  50%{box-shadow:0 2px 8px rgba(228,87,61,.5),0 0 0 5px rgba(228,87,61,.14)}
+}
+/* когда есть товары — сама кнопка корзины слегка выделяется */
+.icon-btn.has-items{background:var(--lime)}
+.icon-btn.has-items svg{color:var(--btn-ink)}
+@media(prefers-reduced-motion:reduce){
+  #cartCount.on{animation:none}
+}
 
 /* ============ HERO ============ */
 .hero{
@@ -478,15 +488,12 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
 .ok-svg .dashes line{stroke:var(--line);stroke-width:2;stroke-linecap:round}
 .ok-modal.on .dashes{animation:dashMove .5s linear infinite}
 @keyframes dashMove{from{transform:translateX(0)}to{transform:translateX(-50px)}}
-.ok-svg .courier{transform:translateX(-70px);opacity:0}
-.ok-modal.on .courier{animation:courierIn 3.4s cubic-bezier(.35,.6,.3,1) forwards}
-@keyframes courierIn{
-  0%{transform:translateX(-70px);opacity:0}
-  12%{opacity:1}
-  55%{transform:translateX(70px)}
-  70%{transform:translateX(60px)}
-  100%{transform:translateX(320px);opacity:1}
-}
+.ok-svg .courier{transform:translateX(60px);opacity:0}
+.ok-modal.on .courier{animation:courierIn .6s ease-out forwards}
+@keyframes courierIn{to{transform:translateX(60px);opacity:1}}
+.ok-svg .courier-bob{transform-origin:center;transform-box:fill-box}
+.ok-modal.on .courier-bob{animation:bob .5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
 .ok-svg .scoot{fill:none;stroke:var(--ink);stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round}
 .ok-svg .box{fill:var(--lime);stroke:var(--ink);stroke-width:2}
 .ok-svg .box-tape{stroke:var(--ink);stroke-width:1.5;opacity:.5}
@@ -498,11 +505,11 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
 .ok-modal.on .wheel,.ok-modal.on .hub{transform-box:fill-box;transform-origin:center;animation:spin .4s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ok-svg .speed{opacity:0}
-.ok-modal.on .speed{stroke:var(--lime);stroke-width:2.5;stroke-linecap:round;animation:speedFlash .3s linear infinite}
-@keyframes speedFlash{0%,100%{opacity:0}50%{opacity:.7}}
+.ok-modal.on .speed{stroke:var(--lime);stroke-width:2.5;stroke-linecap:round;animation:speedFlash .35s linear infinite}
+@keyframes speedFlash{0%,100%{opacity:0}50%{opacity:.65}}
 @media(prefers-reduced-motion:reduce){
-  .ok-modal.on .courier,.ok-modal.on .dashes,.ok-modal.on .wheel,.ok-modal.on .hub,.ok-modal.on .speed{animation:none}
-  .ok-svg .courier{transform:translateX(90px);opacity:1}
+  .ok-modal.on .courier,.ok-modal.on .courier-bob,.ok-modal.on .dashes,.ok-modal.on .wheel,.ok-modal.on .hub,.ok-modal.on .speed{animation:none}
+  .ok-svg .courier{transform:translateX(60px);opacity:1}
 }
 .ok-modal h3{
   font-family:var(--display);font-weight:700;letter-spacing:-.03em;
@@ -844,24 +851,26 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
         <line x1="160" y1="120" x2="180" y2="120"/>
         <line x1="210" y1="120" x2="230" y2="120"/>
       </g>
-      <!-- курьер на скутере -->
+      <!-- курьер на скутере (едет на месте) -->
       <g class="courier">
         <!-- линии скорости -->
         <g class="speed">
-          <line x1="-6" y1="66" x2="14" y2="66"/>
-          <line x1="-14" y1="78" x2="8" y2="78"/>
-          <line x1="-4" y1="90" x2="12" y2="90"/>
+          <line x1="16" y1="66" x2="36" y2="66"/>
+          <line x1="8" y1="78" x2="30" y2="78"/>
+          <line x1="18" y1="90" x2="34" y2="90"/>
         </g>
-        <!-- тело скутера -->
-        <path class="scoot" d="M40 96 L64 96 L70 78 L86 78 L86 92 Q100 92 100 96"/>
-        <!-- коробка с едой -->
-        <rect class="box" x="34" y="70" width="20" height="20" rx="3"/>
-        <path class="box-tape" d="M44 70 L44 90 M34 80 L54 80"/>
-        <!-- курьер -->
-        <circle class="rider-head" cx="74" cy="60" r="7"/>
-        <path class="rider-body" d="M74 67 Q78 78 84 80 L70 80 Q70 72 74 67"/>
-        <!-- руль -->
-        <line class="handle" x1="84" y1="80" x2="92" y2="74"/>
+        <g class="courier-bob">
+          <!-- тело скутера -->
+          <path class="scoot" d="M40 96 L64 96 L70 78 L86 78 L86 92 Q100 92 100 96"/>
+          <!-- коробка с едой -->
+          <rect class="box" x="34" y="70" width="20" height="20" rx="3"/>
+          <path class="box-tape" d="M44 70 L44 90 M34 80 L54 80"/>
+          <!-- курьер -->
+          <circle class="rider-head" cx="74" cy="60" r="7"/>
+          <path class="rider-body" d="M74 67 Q78 78 84 80 L70 80 Q70 72 74 67"/>
+          <!-- руль -->
+          <line class="handle" x1="84" y1="80" x2="92" y2="74"/>
+        </g>
         <!-- колёса -->
         <circle class="wheel" cx="52" cy="100" r="9"/>
         <circle class="wheel" cx="94" cy="100" r="9"/>
@@ -871,7 +880,7 @@ footer .fl{font-family:var(--display);font-weight:800;color:var(--ink);letter-sp
     </svg>
   </div>
   <h3>Ваш заказ принят!</h3>
-  <p>Курьер уже мчит к вам 🛵<br>Ожидайте звонка менеджера для подтверждения.</p>
+  <p>Ожидайте звонка менеджера для подтверждения.</p>
   <button class="ok-btn" id="okBtn">Отлично</button>
 </div>
 
@@ -1166,6 +1175,7 @@ function paint(){
   const cc=$('cartCount');
   cc.textContent=qty; cc.classList.toggle('on',qty>0);
   cc.classList.remove('pop'); void cc.offsetWidth; if(qty) cc.classList.add('pop');
+  $('cartBtn').classList.toggle('has-items',qty>0);
 
   const body=$('cartBody');
   if(!cart.length){
