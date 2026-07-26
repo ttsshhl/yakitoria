@@ -1239,7 +1239,7 @@ function paint(){
   }else{
     body.innerHTML=cart.map((it,x)=>`
       <div class="ci">
-        ${it.i?`<img src="${IMG+it.i+'.jpg?v='+IMG_VER}" alt="">`:`<div style="width:66px;height:66px;border-radius:13px;background:var(--glass);display:grid;place-items:center;flex:none">🥢</div>`}
+        ${it.i?`<img src="${PHOTOS[it.i]||IMG+it.i+'.jpg'}" alt="">`:`<div style="width:66px;height:66px;border-radius:13px;background:var(--glass);display:grid;place-items:center;flex:none">🥢</div>`}
         <div class="ci-i">
           <h6>${it.n}</h6>
           <div class="p">${it.p} ₽</div>
